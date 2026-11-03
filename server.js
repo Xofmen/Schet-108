@@ -48,7 +48,7 @@ const wss=new WebSocketServer({server:srv,maxPayload:262144});
 
 const alive=r=>r.players.filter(p=>!p.out);
 const roundNo=r=>Math.min(...alive(r).map(p=>p.scores.length))+1;
-const np=(id,name)=>({id,name,score:0,scores:[],out:false,place:null,nick:null,outRound:null});
+const np=(id,name)=>({id,name,score:0,startScore:0,lateJoin:false,scores:[],out:false,place:null,nick:null,outRound:null});
 const code4=()=>{let c;do c=String(1000+rnd(9000));while(db.rooms[c]);return c};
 const bc=c=>{const r=db.rooms[c];if(r)wss.clients.forEach(w=>{if(w.code===c&&w.readyState===1)w.send(JSON.stringify({t:'room',room:r}))})};
 const touch=r=>{r.updatedAt=Date.now();save()};
@@ -60,7 +60,8 @@ function clean(s,uid){ // проверка и пересборка комнат�
   for(const p of s.players){
     if(!p||typeof p.id!=='string'||typeof p.name!=='string'||!Array.isArray(p.scores)||!p.scores.every(num))return null;
     const scores=p.scores.slice(0,200);
-    players.push({id:p.id.slice(0,60),name:p.name.slice(0,14),score:scores.reduce((a,b)=>a+b,0),scores,out:!!p.out,
+    const startScore=num(p.startScore)?Math.max(0,p.startScore):0;
+    players.push({id:p.id.slice(0,60),name:p.name.slice(0,14),score:startScore+scores.reduce((a,b)=>a+b,0),startScore,lateJoin:!!p.lateJoin,scores,out:!!p.out,
       place:num(p.place)?p.place:null,nick:typeof p.nick==='string'?p.nick.slice(0,30):null,outRound:num(p.outRound)?p.outRound:null});
   }
   if(!players.some(p=>p.id===uid)||!players.some(p=>p.id===s.creator))return null;
@@ -97,10 +98,18 @@ wss.on('connection',ws=>{
       case'sub':ws.code=code;ack();ws.send(JSON.stringify({t:'room',room:r}));return;
       case'join':{
         if(!me){
-          if(r.status!=='lobby')return ack('Игра уже идёт, войти нельзя');
+          if(!['lobby','active'].includes(r.status))return ack('Игра уже окончена');
           if(r.players.length>=10)return ack('В комнате уже 10 игроков');
           const n=nm();if(r.players.some(p=>p.name.toLowerCase()===n.toLowerCase()))return ack('Такое имя уже есть, выбери другое');
-          r.players.push(np(ws.uid,n));touch(r)}
+          const newcomer=np(ws.uid,n);
+          if(r.status==='active'){
+            // Поздний участник начинает с текущего максимального счёта и входит в текущий раунд.
+            newcomer.startScore=Math.max(0,...r.players.map(p=>p.score));
+            newcomer.score=newcomer.startScore;
+            newcomer.lateJoin=true;
+            newcomer.scores=Array(Math.max(0,roundNo(r)-1)).fill(0);
+          }
+          r.players.push(newcomer);touch(r)}
         ws.code=code;ack();bc(code);return}
       case'start':
         if(!isCreator||r.status!=='lobby')return ack('Нельзя');
