@@ -21,16 +21,28 @@ let tm=0;
 const save=()=>{clearTimeout(tm);tm=setTimeout(()=>{try{fs.mkdirSync(DIR,{recursive:true});fs.writeFileSync(FILE+'.tmp',JSON.stringify(db));fs.renameSync(FILE+'.tmp',FILE)}catch(e){console.error(e)}},500)};
 
 const srv=http.createServer((q,s)=>{
-  let u;try{u=decodeURIComponent((q.url||'/').split('?')[0])}catch{s.writeHead(400);return s.end()}
-  if(u==='/health')return s.end('ok');
-  if(u.endsWith('/'))u+='index.html';
-  const f=path.normalize(path.join(PUB,u));
-  if(!f.startsWith(PUB+path.sep)){s.writeHead(403);return s.end()}
-  fs.readFile(f,(e,d)=>{
-    if(e){s.writeHead(404);return s.end('Not found')}
-    const ext=path.extname(f);
-    s.writeHead(200,{'Content-Type':MIME[ext]||'application/octet-stream','Cache-Control':ext==='.png'?'public, max-age=86400':'no-cache'});
-    s.end(d)});
+  let pathname;
+  try { pathname=decodeURIComponent(new URL(q.url||'/', 'http://localhost').pathname); }
+  catch { s.writeHead(400,{'Content-Type':'text/plain; charset=utf-8'}); return s.end('Bad request'); }
+  if(pathname==='/health'){
+    s.writeHead(200,{'Content-Type':'text/plain; charset=utf-8','Cache-Control':'no-store'});
+    return s.end('ok');
+  }
+  if(pathname==='/') pathname='/index.html';
+  const file=path.resolve(PUB, '.'+pathname);
+  if(file!==PUB && !file.startsWith(PUB+path.sep)){
+    s.writeHead(403,{'Content-Type':'text/plain; charset=utf-8'}); return s.end('Forbidden');
+  }
+  fs.readFile(file,(err,data)=>{
+    if(err){
+      s.writeHead(err.code==='ENOENT'?404:500,{'Content-Type':'text/plain; charset=utf-8','Cache-Control':'no-store'});
+      return s.end(err.code==='ENOENT'?'Not found':'Server error');
+    }
+    const ext=path.extname(file).toLowerCase();
+    const mime={...MIME,'.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.ico':'image/x-icon'};
+    s.writeHead(200,{'Content-Type':mime[ext]||'application/octet-stream','Cache-Control':(ext==='.html'||ext==='.js'||ext==='.webmanifest')?'no-store':'public, max-age=86400'});
+    s.end(data);
+  });
 });
 const wss=new WebSocketServer({server:srv,maxPayload:262144});
 

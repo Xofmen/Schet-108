@@ -1,6 +1,6 @@
 // Офлайн-кэш: приложение открывается даже без интернета.
 // После изменений в файлах увеличьте номер версии, чтобы телефоны подтянули обновление.
-const CACHE = 'schet108-v3';
+const CACHE = 'schet108-v4';
 const SHELL = [
   './', './index.html', './manifest.webmanifest',
   './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png'
