@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Счёт 108</title>
 <meta name="description" content="Счёт для карточной игры 108: раунды, вылеты, прозвища и победители.">
-<meta name="theme-color" content="#1d5a41">
+<meta name="theme-color" content="#fbf7ee">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="108">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -23,18 +23,12 @@ img{max-width:100%}[hidden]{display:none!important}
 
 /* Layout: one-column card-table scorepad; felt green as the table, card red for danger, everything thumb-sized */
 :root{
-  --bg:#eaefeb; --surface:#ffffff; --surface-2:#f4f7f5; --ink:#15201a; --muted:#5b6a61; --line:#d3dcd6;
+  --bg:#fbf7ee; --surface:#ffffff; --surface-2:#f4efe3; --ink:#1f1d18; --muted:#6b665a; --line:#e6dfce; color-scheme:light;
   --felt:#1d5a41; --felt-ink:#ffffff; --red:#c12a3a; --ok:#1d8a4b; --gold:#a8790a; --shade:rgba(10,20,15,.55);
   --f-display:"Unbounded","Arial Black",system-ui,sans-serif;
   --f-body:"Golos Text",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --r:14px;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0d1511; --surface:#15201a; --surface-2:#1b2821; --ink:#e7eee9; --muted:#93a39a; --line:#27362d;
-  --felt:#3fae7a; --felt-ink:#07130d; --red:#ff6b78; --ok:#4fd18b; --gold:#e8bb4f; --shade:rgba(0,0,0,.7); color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#0d1511; --surface:#15201a; --surface-2:#1b2821; --ink:#e7eee9; --muted:#93a39a; --line:#27362d;
-  --felt:#3fae7a; --felt-ink:#07130d; --red:#ff6b78; --ok:#4fd18b; --gold:#e8bb4f; --shade:rgba(0,0,0,.7); color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.45;-webkit-tap-highlight-color:transparent}
 #app{max-width:560px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px 40px;display:flex;flex-direction:column;gap:20px}
@@ -178,535 +172,148 @@ button:focus-visible,input:focus-visible,label:focus-within{outline:2px solid va
 .warn{font-size:14px;padding:10px 12px;border-radius:10px;background:color-mix(in srgb,var(--gold) 14%,transparent);color:var(--ink)}
 
 /* events overlay */
-.ev{position:fixed;inset:0;z-index:80;background:#0b120e;color:#f2f6f3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:calc(24px + env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px));text-align:center;overflow-y:auto}
+.ev{position:fixed;inset:0;z-index:80;background:var(--bg);color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:calc(24px + env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px));text-align:center;overflow-y:auto}
 .ev .item{display:flex;flex-direction:column;gap:4px;animation:pop .45s cubic-bezier(.2,1.4,.4,1) both}
 .ev .item:nth-child(2){animation-delay:.15s}.ev .item:nth-child(3){animation-delay:.3s}
 .ev .who{font-size:18px;opacity:.8}
-.ev .nk{font-family:var(--f-display);font-weight:800;font-size:clamp(34px,11vw,56px);line-height:1.05;color:#ff6b78;text-wrap:balance}
-.ev .z .nk{color:#4fd18b}
-.ev .th .nk{color:#e8bb4f;font-size:clamp(48px,16vw,84px);letter-spacing:-.02em}
-.ev .tag{font-family:var(--f-display);font-size:18px;color:#e8bb4f;font-weight:700}
+.ev .nk{font-family:var(--f-display);font-weight:800;font-size:clamp(34px,11vw,56px);line-height:1.05;color:var(--red);text-wrap:balance}
+.ev .z .nk{color:var(--ok)}
+.ev .th .nk{color:var(--gold);font-size:clamp(48px,16vw,84px);letter-spacing:-.02em}
+.ev .tag{font-family:var(--f-display);font-size:18px;color:var(--gold);font-weight:700}
 .ev .tap{font-size:13px;opacity:.55}
 @keyframes pop{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.ev .item{animation:none}}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:14px;z-index:90;max-width:calc(100% - 32px)}
+.ev{text-align:center}.crown{font-size:96px;line-height:1;animation:pop .6s cubic-bezier(.2,1.4,.4,1) both}
 </style>
-<script src="config.js"></script>
-<script>
-if(window.SCHET108_CONFIG&&SCHET108_CONFIG.firebase){
-  var v='10.12.2',b='https://www.gstatic.com/firebasejs/'+v+'/firebase-';
-  document.write('<script src="'+b+'app-compat.js"><\/script><script src="'+b+'auth-compat.js"><\/script><script src="'+b+'firestore-compat.js"><\/script>');
-}
-</script>
 </head>
 <body>
 <div id="app"></div>
-<div id="sheet-root"></div>
-<div id="picker-root"></div>
 <div id="ev-root"></div>
 <div id="toast-root"></div>
 <script>
-/* ---------- правила ---------- */
-const RANKS=[
-  {r:'6',l:'6',v:6},{r:'7',l:'7',v:7},{r:'8',l:'8',v:8},
-  {r:'9',l:'9',v:0},{r:'10',l:'10',v:10},{r:'J',l:'В',v:2},
-  {r:'Q',l:'Д',v:3},{r:'K',l:'К',v:4},{r:'A',l:'Т',v:11}];
-const RV=Object.fromEntries(RANKS.map(x=>[x.r,x.v]));
-const RL=Object.fromEntries(RANKS.map(x=>[x.r,x.l]));
-const SUIT={s:'♠',c:'♣',h:'♥',d:'♦'};
-const SUITN={s:'пики',c:'крести',h:'черви',d:'кирпич'};
-const QBONUS={s:40,c:20,h:20,d:20};
-const LIMIT=108;
-// Любая карта по номиналу (дама = 3). Если на руке осталась ОДНА карта и это дама — бонус масти вместо 3: пики +40, остальные +20
-const cardValue=c=>RV[c.r];
-const handSum=cs=>cs.length===1&&cs[0].r==='Q'?(QBONUS[cs[0].s]||20):cs.reduce((a,c)=>a+cardValue(c),0);
-const cardLabel=c=>(RL[c.r]||c.r)+(c.s?SUIT[c.s]:'');
-const isRed=s=>s==='h'||s==='d';
-const cardsFor=n=>n>=7?3:n>=5?4:5;
-const plural=(n,a,b,c)=>{n=Math.abs(n)%100;const n1=n%10;if(n>10&&n<20)return c;if(n1>1&&n1<5)return b;if(n1===1)return a;return c};
-
-const NICKS={
- 1:['Чайка','Осёл','Крыса','Таракан','Пельмень','Тапок','Бройлер','Хомяк в колесе','Сосиска','Картошка фри','Голубь с помойки','Сонная муха'],
- 2:['Баран','Индюк','Утка','Курица','Ленивец','Сурок','Кабачок','Пингвин'],
- 3:['Енот','Шакал','Скунс','Бобёр','Кабан','Барсук','Гиена'],
- 4:['Халк','Шрек','Тор','Локи','Груут'],
- 5:['Человек-паук','Бэтмен','Флэш','Робин'],
- 6:['Железный человек','Капитан Америка','Супермен'],
- 7:['Доктор Стрэндж','Чёрная пантера','Аквамен'],
- 8:['Дэдпул','Росомаха','Джон Уик'],
- 9:['Терминатор','Рэмбо','Брюс Ли']};
-const WIN_NICK='Танос', WIN_TAG='Выигрыш есть — можно поесть';
-function pickNick(place,used){const pool=NICKS[Math.min(place,9)];const free=pool.filter(n=>!used.includes(n));const a=free.length?free:pool;return a[Math.floor(Math.random()*a.length)]}
-
-/* ---------- утилиты ---------- */
+const LIMIT=108,WIN_NICK='Танос',WIN_TAG='Выигрыш есть — можно поесть';
 const $=(s,r=document)=>r.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const clone=o=>JSON.parse(JSON.stringify(o));
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch{return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
 const rid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-5);
-const nkey=name=>{let h=5381;const s=name.trim().toLowerCase();for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))>>>0;return 'n'+h.toString(16)};
-const fmtDate=ts=>new Date(ts).toLocaleDateString('ru-RU',{day:'numeric',month:'short'});
+let uid=LS.get('s108.device',null);if(!uid){uid='d'+rid();LS.set('s108.device',uid)}
 function toast(msg){const r=$('#toast-root');r.innerHTML=`<div class="toast">${esc(msg)}</div>`;clearTimeout(toast.t);toast.t=setTimeout(()=>r.innerHTML='',3200)}
 
-/* ---------- игровая логика ---------- */
-const alive=t=>t.players.filter(p=>!p.out);
-function nextDealer(t,fromId){
-  const ps=t.players;let i=ps.findIndex(p=>p.id===fromId);
-  for(let k=1;k<=ps.length;k++){const p=ps[(i+k+ps.length)%ps.length];if(!p.out)return p.id}
-  return null;
+let ws,up=false,n=0,acks={},room=null,prev=null,queue=[],restoring=false;
+let code=LS.get('s108.room',''),name=LS.get('s108.name',''),draft='',pre=(location.hash.match(/^#(\d{4})$/)||[])[1]||'';
+const send=o=>new Promise((res,rej)=>{if(!ws||ws.readyState!==1)return rej(new Error('Нет связи с сервером'));o.id=++n;acks[n]={res,rej};ws.send(JSON.stringify(o))});
+
+function open(){
+  ws=new WebSocket((location.protocol==='https:'?'wss://':'ws://')+location.host);
+  ws.onopen=()=>ws.send(JSON.stringify({t:'hello',uid}));
+  ws.onmessage=e=>{const m=JSON.parse(e.data);
+    if(m.t==='hello'){up=true;if(code)send({t:'sub',code}).catch(()=>{});render()}
+    else if(m.t==='room')onRoom(m.room);
+    else if(m.t==='gone')onGone(m);
+    else if(m.t==='ack'){const a=acks[m.id];if(a){delete acks[m.id];m.err?a.rej(new Error(m.err)):a.res(m)}}};
+  ws.onclose=()=>{up=false;for(const k in acks){acks[k].rej(new Error('Связь потеряна'));delete acks[k]}render();setTimeout(open,2000)};
 }
-function applyRound(t,deltas,finisher,fq){
-  const before=clone(t.players);
-  const act=alive(t);
-  const final={},outNow=[],zero=[];
-  for(const p of act){
-    let d=p.id===finisher?(fq?-QBONUS[fq]:0):(Number(deltas[p.id])||0);
-    final[p.id]=d;p.score+=d;
-    if(p.score===LIMIT){p.score=0;zero.push(p.id)}
-    else if(p.score>LIMIT)outNow.push(p);
-  }
-  let survivors=act.filter(p=>!outNow.includes(p));
-  if(survivors.length===0&&outNow.length){ // вылетели все разом — побеждает тот, у кого меньше
-    outNow.sort((a,b)=>a.score-b.score);survivors=[outNow.shift()];
-  }
-  outNow.sort((a,b)=>b.score-a.score);
-  let place=t.players.filter(p=>p.out&&!p.left).length;
-  const used=t.players.map(p=>p.nick).filter(Boolean);
-  for(const p of outNow){place++;p.out=true;p.place=place;p.nick=pickNick(place,used);used.push(p.nick);p.outRound=t.rounds.length+1}
-  const after={};for(const p of t.players)after[p.id]=p.score;
-  const round={n:t.rounds.length+1,dealer:t.dealerId,deltas:final,finisher:finisher||null,fq:fq||null,before,after,outIds:outNow.map(p=>p.id),zeroIds:zero};
-  t.rounds.push(round);
-  if(survivors.length===1){
-    const w=survivors[0];w.nick=WIN_NICK;t.status='done';t.winner={id:w.id,name:w.name};t.finishedAt=Date.now();
-  }else t.dealerId=nextDealer(t,t.dealerId);
-  t.updatedAt=Date.now();
-  return round;
+function dropRoom(){code='';room=null;prev=null;queue=[];LS.set('s108.room','');LS.set('s108.snap',null);$('#ev-root').innerHTML='';render()}
+function onGone(m){
+  const snap=LS.get('s108.snap',null);
+  if(!m.deleted&&!restoring&&snap&&snap.code===m.code&&(snap.players||[]).some(p=>p.id===uid)){restoring=true;send({t:'restore',room:snap}).catch(()=>{restoring=false;dropRoom()});return}
+  if(m.code===code){dropRoom();toast(m.deleted?'Комната удалена создателем':'Комната не найдена')}
 }
-function undoRound(t){
-  const r=t.rounds.pop();if(!r)return;
-  // очки откатываем, но текущий порядом мест, ушедших и новичков сохраняем
-  t.players=t.players.map(p=>{const b=r.before.find(x=>x.id===p.id);if(!b)return p;if(p.left)Object.assign(b,{out:true,left:true,leftRound:p.leftRound,nick:null,place:null});return b});
-  t.dealerId=r.dealer;if(t.players.find(p=>p.id===t.dealerId)?.out)t.dealerId=nextDealer(t,t.dealerId);
-  t.status='active';t.winner=null;t.finishedAt=null;t.updatedAt=Date.now();
+function onRoom(r){
+  restoring=false;
+  if(prev&&prev.code===r.code){
+    const was=new Set(prev.players.filter(p=>p.out).map(p=>p.id));
+    r.players.forEach(p=>{if(p.out&&!was.has(p.id))queue.push({k:'out',p})});
+    if(r.status==='done'&&prev.status!=='done'&&r.winner)queue.push({k:'win',p:r.players.find(x=>x.id===r.winner.id)});
+  }
+  if(r.status!=='active'||!prev||prev.code!==r.code||roundNo(r)!==roundNo(prev))draft='';
+  room=r;prev=r;code=r.code;LS.set('s108.room',code);LS.set('s108.snap',r);
+  render();if(queue.length&&!$('#ev-root').innerHTML)showEv();
 }
 
-/* ---------- состояние и данные ---------- */
-const S={db:null,user:null,sample:null,canPhoto:false,myId:null,isOwner:false,canWrite:null,
-  tables:[],roster:[],loaded:false,slow:false,noDb:false,view:'home',tid:null,confirm:null};
-const seen={};
-const getT=id=>S.tables.find(t=>t.id===id);
-const canEditT=t=>!!(S.db&&t&&((S.myId&&t.creator===S.myId)||S.isOwner));
-let wq=Promise.resolve();
-function saveT(t){
-  const body=clone(t);delete body.id;
-  wq=wq.then(()=>store.setTable(t.id,body)).catch(()=>toast('Не сохранилось. Проверьте интернет и повторите.'));
-  return wq;
-}
-// локальное применение до ответа хранилища
-function upsertLocal(t){const i=S.tables.findIndex(x=>x.id===t.id);if(i>=0)S.tables[i]=t;else S.tables.unshift(t)}
+/* ---------- логика на экране ---------- */
+const me=()=>room&&room.players.find(p=>p.id===uid);
+const alive=r=>r.players.filter(p=>!p.out);
+const roundNo=r=>Math.min(...alive(r).map(p=>p.scores.length))+1;
 
-/* ---------- хранилище: этот телефон или Firebase ---------- */
-const CFG=window.SCHET108_CONFIG||{};
-const LS={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch{return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
-function deviceId(){let id=LS.get('s108.device',null);if(!id){id='d'+rid();LS.set('s108.device',id)}return id}
-function localStore(){
-  const subs={tables:[],roster:[]};
-  const read=c=>LS.get('s108.'+c,{});
-  const emit=c=>{const arr=Object.entries(read(c)).map(([id,v])=>({id,...v}));
-    arr.sort(c==='tables'?(a,b)=>b.createdAt-a.createdAt:(a,b)=>(b.lastUsed||0)-(a.lastUsed||0));
-    subs[c].forEach(f=>f(arr,false))};
-  addEventListener('storage',e=>{if(e.key==='s108.tables')emit('tables');if(e.key==='s108.roster')emit('roster')});
-  const put=(c,id,v)=>{const m=read(c);if(v===null)delete m[id];else m[id]=v;LS.set('s108.'+c,m);emit(c)};
-  return {mode:'local',async init(){return deviceId()},sub(c,f){subs[c].push(f);setTimeout(()=>emit(c))},
-    async setTable(id,v){put('tables',id,v)},async deleteTable(id){put('tables',id,null)},async setRoster(id,v){put('roster',id,v)}};
+function showEv(){
+  const e=queue[0];if(!e){$('#ev-root').innerHTML='';return}
+  const p=e.p;
+  $('#ev-root').innerHTML=e.k==='out'
+    ?`<div class="ev" onclick="nextEv()"><div class="item"><div class="who">Игра окончена для</div><div class="nk">${esc(p.name)}<br>проиграл</div><div class="tag">${esc(p.nick||'')} · ${p.score} очков</div></div><div class="tap">Нажми, чтобы закрыть</div></div>`
+    :`<div class="ev" onclick="nextEv()"><div class="item th"><div class="crown">👑</div><div class="who">Победитель</div><div class="nk">${esc(p.name)}</div><div class="tag">${WIN_NICK} · ${WIN_TAG}</div></div><div class="tap">Нажми, чтобы закрыть</div></div>`;
+  try{navigator.vibrate(e.k==='out'?[200]:[200,100,200])}catch{}
 }
-function serverStore(){
-  let ws,up=false,n=0;const uid=deviceId(),acks={},subs={tables:[],roster:[]};
-  const mine=LS.get('s108.mine',{});
-  const send=o=>new Promise((res,rej)=>{if(!ws||ws.readyState!==1)return rej(new Error('offline'));o.id=++n;acks[n]={res,rej};ws.send(JSON.stringify(o))});
-  const keep=()=>{const k=Object.keys(mine);if(k.length>60)k.sort((a,b)=>(mine[a].createdAt||0)-(mine[b].createdAt||0)).slice(0,k.length-60).forEach(x=>delete mine[x]);LS.set('s108.mine',mine)};
-  function open(){return new Promise((res,rej)=>{
-    ws=new WebSocket((location.protocol==='https:'?'wss://':'ws://')+location.host);
-    ws.onopen=()=>ws.send(JSON.stringify({t:'hello',uid}));
-    ws.onmessage=e=>{const m=JSON.parse(e.data);
-      if(m.t==='hello'){up=true;res()}
-      else if(m.t==='snap'){subs[m.c].forEach(f=>f(m.items,false));
-        if(m.c==='tables')Object.entries(mine).forEach(([id,v])=>{if(!m.items.some(x=>x.id===id))send({t:'set',c:'tables',key:id,v}).catch(()=>{})})}
-      else if(m.t==='ack'){const a=acks[m.id];if(a){delete acks[m.id];m.err?a.rej(new Error(m.err)):a.res()}}};
-    ws.onerror=()=>{if(!up)rej(new Error('ws'))};
-    ws.onclose=()=>{for(const k in acks){acks[k].rej(new Error('closed'));delete acks[k]}if(up)setTimeout(()=>open().catch(()=>{}),2000);else rej(new Error('ws'))}})}
-  return {mode:'cloud',async init(){await open();return uid},sub(c,f){subs[c].push(f)},
-    async setTable(id,v){if(v.creator===uid){mine[id]=v;keep()}return send({t:'set',c:'tables',key:id,v})},
-    async deleteTable(id){delete mine[id];keep();return send({t:'del',key:id})},
-    setRoster:(id,v)=>send({t:'set',c:'roster',key:id,v})};
-}
-function firebaseStore(conf){
-  let fs;
-  return {mode:'cloud',
-    async init(){firebase.initializeApp(conf);fs=firebase.firestore();try{fs.enablePersistence({synchronizeTabs:true}).catch(()=>{})}catch{}
-      const c=await firebase.auth().signInAnonymously();return c.user.uid},
-    sub(c,f){const q=c==='tables'?fs.collection('tables').orderBy('createdAt','desc').limit(200):fs.collection('roster').orderBy('lastUsed','desc').limit(100);
-      q.onSnapshot({includeMetadataChanges:true},s=>f(s.docs.map(d=>({id:d.id,...d.data()})),s.metadata.fromCache),e=>f(null,false,e))},
-    setTable:(id,v)=>fs.collection('tables').doc(id).set(v),
-    deleteTable:id=>fs.collection('tables').doc(id).delete(),
-    setRoster:(id,v)=>fs.collection('roster').doc(id).set(v)};
-}
-let store;
-async function init(){
-  readHash();render();
-  store=CFG.server?serverStore():CFG.firebase&&window.firebase?firebaseStore(CFG.firebase):localStore();
-  try{S.myId=await store.init()}
-  catch(e){console.error(e);toast('Сервер не подключился — работаю только на этом телефоне');store=localStore();S.myId=await store.init()}
-  S.mode=store.mode;S.db=store;S.isOwner=S.mode==='local';S.canWrite=true;
-  S.apiKey=LS.get('s108.apikey','');S.canPhoto=!!S.apiKey;
-  const timer=setTimeout(()=>{if(!S.loaded){S.slow=true;render()}},10000);
-  store.sub('tables',(arr,fromCache,err)=>{
-    if(err){clearTimeout(timer);S.loaded=true;S.slow=true;render();return}
-    S.tables=arr;S.loaded=true;if(!fromCache){clearTimeout(timer);S.slow=false}
-    checkEvents();render();if(R&&R.kind==='round'&&!getT(R.tid))closeSheet();
-  });
-  store.sub('roster',arr=>{if(arr)S.roster=arr});
-}
-function checkEvents(){
-  for(const t of S.tables){
-    const n=(t.rounds||[]).length;
-    if(!(t.id in seen)){seen[t.id]=n;continue}
-    if(n>seen[t.id]&&S.view==='table'&&S.tid===t.id){
-      const r=t.rounds[n-1];
-      if(r.outIds?.length||r.zeroIds?.length||t.status==='done')showEvents(t,r);
-    }
-    seen[t.id]=n;
-  }
-}
+function nextEv(){queue.shift();showEv()}
 
-/* ---------- навигация ---------- */
-function readHash(){const h=location.hash.slice(1);if(h.startsWith('t-')){S.view='table';S.tid=h.slice(2)}else{S.view='home';S.tid=null}S.confirm=null}
-addEventListener('hashchange',()=>{readHash();render();scrollTo(0,0)});
-const go=h=>{location.hash=h};
+function createRoom(){
+  name=($('#nm').value||'').trim();if(!name)return toast('Введи своё имя');LS.set('s108.name',name);
+  send({t:'create',name}).catch(e=>toast(e.message));
+}
+function joinRoom(){
+  name=($('#nm').value||'').trim();const c=($('#cd').value||'').trim();
+  if(!name)return toast('Введи своё имя');if(!/^\d{4}$/.test(c))return toast('Код — 4 цифры');
+  LS.set('s108.name',name);send({t:'join',code:c,name}).catch(e=>toast(e.message));
+}
+function leave(){if(confirm('Выйти из комнаты? Вернуться можно по коду.')){send({t:'unsub'}).catch(()=>{});dropRoom();history.replaceState(null,'',location.pathname)}}
+function startGame(){send({t:'start',code}).catch(e=>toast(e.message))}
+function submit(){
+  const v=($('#pts').value||'').trim();if(!/^-?\d+$/.test(v))return toast('Введи число очков');
+  const pts=+v,m=me();
+  if(m.score+pts>=LIMIT&&!confirm(`Будет ${m.score+pts} очков — это выбывание из игры. Записать?`))return;
+  send({t:'score',code,pts}).then(()=>draft='').catch(e=>toast(e.message));
+}
+function fix(){send({t:'fix',code}).catch(e=>toast(e.message))}
+function again(){send({t:'again',code}).catch(e=>toast(e.message))}
+function delRoom(){if(confirm('Удалить комнату для всех игроков?'))send({t:'del',code}).catch(e=>toast(e.message))}
+async function share(){
+  const url=location.origin+'/#'+room.code,text='Заходи в комнату '+room.code+' — Счёт 108';
+  try{if(navigator.share){await navigator.share({title:'Счёт 108',text,url});return}}catch{return}
+  try{await navigator.clipboard.writeText(url);toast('Ссылка скопирована')}catch{toast(url)}
+}
 
 /* ---------- экраны ---------- */
+const hero=()=>`<div class="hero"><div class="logo">108<small>Счёт для<br>карточной игры</small></div><div class="suits">♠<span class="rd">♥</span>♣<span class="rd">♦</span></div></div>`;
+function home(){
+  return `${hero()}${up?'':'<div class="note">Подключаюсь к серверу… Если долго, подожди минуту: сервер просыпается.</div>'}
+  <div class="list"><h2>Твоё имя</h2><div class="fld"><input id="nm" maxlength="14" autocomplete="off" placeholder="Как тебя зовут" value="${esc(name)}" oninput="name=this.value"></div></div>
+  <div class="list"><h2>Новая игра</h2><button class="btn primary block" onclick="createRoom()">Создать комнату</button></div>
+  <div class="list"><h2>Войти в комнату</h2><div class="fld"><input id="cd" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="Код из 4 цифр" value="${esc(pre)}" oninput="pre=this.value"></div><button class="btn block" onclick="joinRoom()">Войти</button></div>`;
+}
+const top=t=>`<div class="top"><button class="back" onclick="leave()" aria-label="Выйти">←</button><h1>${t}</h1></div>`;
+function lobby(){
+  const mine=room.creator===uid;
+  return `${top('Комната '+room.code)}
+  <div class="deal"><div><div class="lbl">Код комнаты</div><div class="who">${room.code}</div></div><div class="cards">${room.players.length}<span>${room.players.length<2?'игрок':'в списке'}</span></div></div>
+  <button class="btn block" onclick="share()">Поделиться ссылкой</button>
+  <div class="list"><h2>Игроки</h2><div class="players">${room.players.map(p=>`<div class="pl"><div class="st ok">✓</div><div class="nm"><span class="n">${esc(p.name)}</span>${p.id===room.creator?'<span class="dl">создатель</span>':''}${p.id===uid?'<span class="pill">ты</span>':''}</div></div>`).join('')}</div></div>
+  ${mine?`<button class="btn primary block" ${room.players.length<2?'disabled':''} onclick="startGame()">Начать игру</button>${room.players.length<2?'<div class="note">Нужно минимум 2 игрока. Друзья входят по коду или по ссылке.</div>':''}<button class="btn danger block" onclick="delRoom()">Удалить комнату</button>`:'<div class="empty">Ты в списке. Ждём, пока создатель начнёт игру…</div>'}`;
+}
+function game(){
+  const r=room,done=r.status==='done',rn=roundNo(r),m=me(),al=alive(r),wait=al.filter(p=>p.scores.length<rn);
+  const win=done&&r.winner;
+  let h=top('Комната '+r.code)+`<div class="deal ${done?'win':''}"><div><div class="lbl">${done?'Игра окончена':'Раунд '+rn}</div><div class="who">${done?'👑 '+esc(r.winner.name):wait.length?'Ждём: '+wait.map(p=>esc(p.name)).join(', '):'Все записали'}</div></div><div class="cards">${done?'👑':rn}<span>${done?'победитель':'раунд'}</span></div></div>`;
+  if(m&&!done){
+    if(m.out)h+=`<div class="rrow"><div class="h"><b>Ты выбыл</b><span class="pv o">${esc(m.nick||'')}</span></div><div class="stat">Твоя карточка закрыта. Смотри, как играют остальные.</div></div>`;
+    else if(m.scores.length>=rn)h+=`<div class="rrow"><div class="h"><b>Раунд ${rn}: записано</b><span class="pv z">${m.scores[rn-1]>0?'+':''}${m.scores[rn-1]}</span></div><div class="stat">Ждём остальных игроков…</div><button class="btn sm" onclick="fix()">Исправить</button></div>`;
+    else h+=`<div class="rrow"><div class="h"><b>Раунд ${rn}: сколько очков осталось на руках?</b></div><div class="ctl"><input id="pts" type="number" inputmode="numeric" placeholder="0" value="${esc(draft)}" oninput="draft=this.value"><button class="btn primary" onclick="submit()">Записать</button></div><div class="stat">Закрыл раунд дамой — впиши минус: пики −40, остальные масти −20.</div></div>`;
+  }
+  h+=`<div class="list"><h2>Очки</h2><div class="players">${r.players.map(p=>{
+    const pct=Math.max(0,Math.min(100,p.score/LIMIT*100)),w=win&&p.id===r.winner.id;
+    return `<div class="pl ${p.out?'isout':''}"><div class="st ${p.out?'out':w?'crown':'ok'}">${p.out?'✕':w?'👑':p.scores.length>=rn?'✓':'…'}</div><div class="nm"><span class="n">${esc(p.name)}</span>${p.nick?`<span class="nick ${w?'th':''}">${esc(p.nick)}</span>`:''}${p.id===uid?'<span class="pill">ты</span>':''}</div><div class="sc num">${p.score}</div>${p.out?`<div class="left">Карточка закрыта · вылет в раунде ${p.outRound}</div>`:`<div class="bar"><i class="${pct>=90?'crit':pct>=65?'hot':''}" style="width:${pct}%"></i></div>`}</div>`}).join('')}</div></div>`;
+  const rows=Math.max(...r.players.map(p=>p.scores.length));
+  if(rows)h+=`<div class="list"><h2>Раунды</h2><div class="hist"><table><thead><tr><th>№</th>${r.players.map(p=>`<th>${esc(p.name)}</th>`).join('')}</tr></thead><tbody>${Array.from({length:rows},(_,k)=>`<tr><td>${k+1}</td>${r.players.map(p=>`<td class="${p.out&&p.outRound===k+1?'o':''}">${p.scores[k]??'–'}</td>`).join('')}</tr>`).join('')}</tbody></table></div></div>`;
+  h+=`<div class="actions"><button class="btn" onclick="share()">Ссылка</button>${r.creator===uid?(done?'<button class="btn primary" onclick="again()">Новая игра</button>':'<button class="btn danger" onclick="delRoom()">Удалить</button>'):'<button class="btn" onclick="leave()">Выйти</button>'}</div>`;
+  return h;
+}
 function render(){
-  const app=$('#app');
-  if(S.view==='table')app.innerHTML=viewTable();else app.innerHTML=viewHome();
+  const A=$('#app'),el=document.activeElement,id=el&&el.id,val=el&&el.value,pos=el&&el.selectionStart;
+  A.innerHTML=!room?home():room.status==='lobby'?lobby():game();
+  if(id){const e2=document.getElementById(id);if(e2&&e2.tagName==='INPUT'){e2.value=val;e2.focus();try{e2.setSelectionRange(pos,pos)}catch{}}}
 }
-function viewHome(){
-  const act=S.tables.filter(t=>t.status!=='done'),done=S.tables.filter(t=>t.status==='done');
-  const wins={};for(const t of done)if(t.winner){const k=t.winner.name.trim();wins[k]=(wins[k]||0)+1}
-  const lb=Object.entries(wins).sort((a,b)=>b[1]-a[1]).slice(0,8);
-  let h=`<div class="hero"><div class="logo">108<small>счёт<br>без бумажки</small></div><div class="suits" aria-hidden="true">♠<span class="rd">♥</span>♣<span class="rd">♦</span></div></div>`;
-    const canCreate=S.db&&S.canWrite!==false&&S.myId;
-  if(canCreate)h+=`<button class="btn primary block" onclick="openNew()" style="min-height:56px;font-size:17px">+ Новый стол</button>`;
-    if(S.slow&&!S.loaded)h+=`<div class="note">Не получается связаться с сервером. Проверьте интернет — данные появятся сами.</div>`;
-  h+=`<section class="list"><h2>Идут сейчас</h2>`;
-  if(!S.loaded)h+=`<div class="empty">Загружаю столы…</div>`;
-  else if(!act.length)h+=`<div class="empty">Открытых столов нет. Нажмите «Новый стол», выберите число игроков — и в бой.</div>`;
-  else for(const t of act){
-    const al=alive(t);const dl=t.players.find(p=>p.id===t.dealerId);
-    h+=`<button class="tcard" onclick="go('t-${t.id}')"><div class="row"><b>${esc(t.name)}</b><span class="pill live">● раунд ${t.rounds.length+1}</span></div>
-      <div class="row muted" style="font-size:14px"><span>В игре ${al.length} из ${t.players.length}</span><span>сдаёт ${esc(dl?.name||'—')}</span></div></button>`;
-  }
-  h+=`</section>`;
-  h+=`<section class="list"><h2>Таносы</h2>`;
-  if(!lb.length)h+=`<div class="empty">Здесь появятся победители. Пока никто не забрал ни одной игры.</div>`;
-  else h+=`<div class="board">${lb.map(([n,c],i)=>`<div class="r"><span class="pos num">${i+1}</span><span>${esc(n)}</span><span class="pill gold num">${c} ${plural(c,'победа','победы','побед')}</span></div>`).join('')}</div>`;
-  h+=`</section>`;
-  if(done.length){
-    h+=`<section class="list"><h2>Сыгранные игры</h2>`;
-    for(const t of done.slice(0,30))h+=`<button class="tcard" onclick="go('t-${t.id}')"><div class="row"><b>${esc(t.name)}</b><span class="pill">${t.rounds.length} ${plural(t.rounds.length,'раунд','раунда','раундов')}</span></div>
-      <div class="row" style="font-size:14px"><span>🏆 ${esc(t.winner?.name||'—')}</span><span class="muted">${fmtDate(t.finishedAt||t.updatedAt)}</span></div></button>`;
-    h+=`</section>`;
-  }
-  if(S.db)h+=`<button class="btn" onclick="openSettings()">⚙ Настройки · ${S.mode==='cloud'?'облако':'этот телефон'}${S.canPhoto?' · фото вкл.':''}</button>`;
-  return h;
-}
-function viewTable(){
-  const t=getT(S.tid);
-  if(!t)return `<div class="top"><button class="back" onclick="go('')" aria-label="Назад">←</button><h1>Стол</h1></div><div class="empty">${S.loaded?'Стол не найден — возможно, его удалили.':'Загружаю стол…'}</div>`;
-  const ed=canEditT(t),al=alive(t),dl=t.players.find(p=>p.id===t.dealerId);
-  let h=`<div class="top"><button class="back" onclick="go('')" aria-label="Назад">←</button><h1>${esc(t.name)}</h1></div>`;
-  if(t.status==='done'){
-    h+=`<div class="deal win"><span class="lbl">Танос этой игры</span><span class="who">${esc(t.winner?.name)}</span><div class="cards">🏆<span>${esc(WIN_TAG)}</span></div></div>`;
-  }else{
-    const nc=cardsFor(al.length);
-    h+=`<div class="deal"><span class="lbl">Раунд ${t.rounds.length+1} · раздаёт</span><span class="who">${esc(dl?.name||'—')}</span><div class="cards num">${nc}<span>${plural(nc,'карта','карты','карт')} каждому</span></div></div>`;
-  }
-  const sorted=[...t.players.filter(p=>!p.out)].concat(t.players.filter(p=>p.out&&!p.left).sort((a,b)=>b.place-a.place),t.players.filter(p=>p.left));
-  h+=`<section class="players">`;
-  for(const p of sorted){
-    const win=t.status==='done'&&t.winner?.id===p.id;
-    const pct=Math.max(0,Math.min(100,p.score/LIMIT*100));
-    const cls=p.score>=95?'crit':p.score>=80?'hot':'';
-    h+=`<div class="pl ${p.out?'isout':''}">
-      <span class="st ${win?'crown':p.out?'out':'ok'}" aria-label="${win?'победитель':p.left?'ушёл':p.out?'выбыл':'в игре'}">${win?'♛':p.left?'→':p.out?'✕':'✓'}</span>
-      <span class="nm"><span class="n">${esc(p.name)}</span>${p.id===t.dealerId&&t.status!=='done'?'<span class="dl">сдаёт</span>':''}${p.nick?`<span class="nick ${win?'th':''}">${esc(p.nick)}</span>`:''}</span>
-      <span class="sc num">${p.score}</span>
-      ${p.out?`<span class="left">${p.left?`ушёл из игры после раунда ${p.leftRound}`:`вылетел ${p.place}-м · раунд ${p.outRound}`}</span>`:`<span class="bar"><i class="${cls}" style="width:${pct}%"></i></span>`}
-    </div>`;
-  }
-  h+=`</section>`;
-  if(ed){
-    h+=`<section class="actions">`;
-    if(t.status!=='done')h+=`<button class="btn primary wide" style="min-height:56px;font-size:17px" onclick="openRound()">Записать раунд ${t.rounds.length+1}</button>
-      <button class="btn" onclick="openAdd()">+ Игрок</button><button class="btn" onclick="openDealer()">Сменить сдающего</button>
-      <button class="btn wide" onclick="openSeats()">⇅ Пересадка и уход игроков</button>`;
-    if(t.rounds.length)h+=S.confirm==='undo'?`<div class="confirm wide"><span>Отменить раунд ${t.rounds.length}? Очки вернутся как были.</span><button class="btn sm" onclick="S.confirm=null;render()">Нет</button><button class="btn sm danger" onclick="doUndo()">Отменить</button></div>`
-      :`<button class="btn wide" onclick="S.confirm='undo';render()">↶ Отменить последний раунд</button>`;
-    h+=`</section>`;
-  }else h+=`<div class="note">Только просмотр — очки записывает создатель стола. Экран обновляется сам.</div>`;
-  if(t.rounds.length){
-    h+=`<section class="list"><h2>История раундов</h2><div class="hist"><table><thead><tr><th>#</th>${t.players.map(p=>`<th>${esc(p.name)}</th>`).join('')}</tr></thead><tbody>`;
-    for(const r of [...t.rounds].reverse()){
-      h+=`<tr><td class="num">${r.n}</td>${t.players.map(p=>{
-        if(!(p.id in r.deltas))return `<td class="muted">${p.id in r.after?'—':''}</td>`;
-        const d=r.deltas[p.id],z=r.zeroIds?.includes(p.id),o=r.outIds?.includes(p.id);
-        return `<td class="num ${o?'o':z?'z':''}">${d>0?'+':''}${d}<small>${z?'108→0':r.after[p.id]}${r.finisher===p.id?' · закрыл':''}</small></td>`}).join('')}</tr>`;
-    }
-    h+=`</tbody></table></div></section>`;
-  }
-  if(ed)h+=S.confirm==='del'?`<div class="confirm"><span>Удалить стол «${esc(t.name)}» вместе с историей?</span><button class="btn sm" onclick="S.confirm=null;render()">Нет</button><button class="btn sm danger" onclick="doDelete()">Удалить</button></div>`
-    :`<button class="btn danger" onclick="S.confirm='del';render()">Удалить стол</button>`;
-  return h;
-}
-async function doUndo(){const t=clone(getT(S.tid));undoRound(t);S.confirm=null;seen[t.id]=t.rounds.length;upsertLocal(t);render();await saveT(t);toast('Раунд отменён')}
-async function doDelete(){const id=S.tid;S.confirm=null;go('');try{await store.deleteTable(id);toast('Стол удалён')}catch{toast('Не удалось удалить')}}
-
-/* ---------- шторка ---------- */
-let R=null;
-function sheet(title,body,footer){
-  $('#sheet-root').innerHTML=`<div class="sheet-wrap" onclick="if(event.target===this)closeSheet()"><div class="sheet" role="dialog" aria-label="${esc(title)}"><header><h3>${esc(title)}</h3><button class="x" onclick="closeSheet()" aria-label="Закрыть">✕</button></header><div class="body">${body}</div>${footer?`<footer>${footer}</footer>`:''}</div></div>`;
-}
-function closeSheet(){$('#sheet-root').innerHTML='';R=null}
-
-/* новый стол */
-function openNew(){R={kind:'new',step:1,count:4,names:[],dealer:0};renderNew()}
-function renderNew(){
-  if(R.step===1){
-    const nc=cardsFor(R.count);
-    sheet('Сколько человек играет?',`<div class="stepper"><button onclick="R.count=Math.max(2,R.count-1);renderNew()" aria-label="Меньше">−</button><span class="v num">${R.count}</span><button onclick="R.count=Math.min(10,R.count+1);renderNew()" aria-label="Больше">+</button></div>
-      <div class="chips" style="justify-content:center">${[2,3,4,5,6,7,8,9,10].map(n=>`<button class="chip ${n===R.count?'on':''}" onclick="R.count=${n};renderNew()">${n}</button>`).join('')}</div>
-      <p class="hint">Раздаём по <b>${nc}</b> ${plural(nc,'карте','карты','карт')}</p>`,
-      `<button class="btn primary block" onclick="R.step=2;R.names=Array.from({length:R.count},(_,i)=>R.names[i]||'');renderNew()">Дальше — имена</button>`);
-  }else{
-    const used=R.names.map(n=>n.trim().toLowerCase());
-    sheet('Кто играет?',`${S.roster.length?`<div class="list"><h2>Быстрый выбор</h2><div class="chips">${S.roster.map(r=>`<button class="chip ${used.includes(r.name.toLowerCase())?'used':''}" onclick="fillName(${esc(JSON.stringify(r.name))})">${esc(r.name)}</button>`).join('')}</div></div>`:''}
-      <div class="list"><h2>По порядку за столом</h2>${R.names.map((n,i)=>`<div class="fld"><span class="seat num">${i+1}</span><input id="nm-${i}" value="${esc(n)}" placeholder="Имя игрока" maxlength="24" autocomplete="off" oninput="R.names[${i}]=this.value;validNew()"><button class="tog ${R.dealer===i?'on':''}" onclick="R.dealer=${i};renderNew()">${R.dealer===i?'сдаёт':'сдаёт?'}</button></div>`).join('')}</div>
-      <div id="nw-err" class="note"></div>`,
-      `<button class="btn primary block" id="nw-go" onclick="createTable()">Начать игру</button><button class="btn block" onclick="R.step=1;renderNew()">Назад</button>`);
-    validNew();
-  }
-}
-function fillName(name){
-  if(R.names.some(n=>n.trim().toLowerCase()===name.toLowerCase()))return;
-  const i=R.names.findIndex(n=>!n.trim());if(i<0)return toast('Все места заняты');
-  R.names[i]=name;renderNew();
-}
-function validNew(){
-  const ns=R.names.map(n=>n.trim());const err=$('#nw-err'),b=$('#nw-go');if(!b)return false;
-  let msg='';if(ns.some(n=>!n))msg='Впишите все имена';
-  else if(new Set(ns.map(n=>n.toLowerCase())).size!==ns.length)msg='Имена повторяются — добавьте букву фамилии';
-  err.textContent=msg;b.disabled=!!msg;return !msg;
-}
-async function createTable(){
-  if(!validNew())return;
-  const now=Date.now();
-  const players=R.names.map(n=>({id:rid(),name:n.trim(),score:0,out:false,place:null,nick:null,outRound:null,joined:1}));
-  const t={id:rid(),name:'Стол · '+new Date().toLocaleDateString('ru-RU',{day:'numeric',month:'long'})+', '+new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'}),
-    creator:S.myId,createdAt:now,updatedAt:now,status:'active',players,dealerId:players[R.dealer].id,rounds:[],winner:null,finishedAt:null};
-  closeSheet();seen[t.id]=0;upsertLocal(t);go('t-'+t.id);
-  await saveT(t);
-  for(const p of players)store.setRoster(nkey(p.name),{name:p.name,lastUsed:now}).catch(()=>{});
-}
-
-/* добавить игрока */
-function openAdd(){
-  const t=getT(S.tid);R={kind:'add',name:''};
-  const start=Math.max(0,...alive(t).map(p=>p.score));
-  const have=t.players.map(p=>p.name.toLowerCase());
-  sheet('Новый игрок',`<p class="note">Зайдёт с <b class="num">${start}</b> — максимум среди тех, кто в игре. Сядет последним по кругу.</p>
-    <div class="fld"><input id="add-nm" placeholder="Имя" maxlength="24" autocomplete="off" oninput="R.name=this.value"></div>
-    ${S.roster.length?`<div class="chips">${S.roster.filter(r=>!have.includes(r.name.toLowerCase())).map(r=>`<button class="chip" onclick="$('#add-nm').value=R.name=${esc(JSON.stringify(r.name))}">${esc(r.name)}</button>`).join('')}</div>`:''}`,
-    `<button class="btn primary block" onclick="addPlayer(${start})">Добавить в игру</button>`);
-}
-async function addPlayer(start){
-  const nm=(R.name||'').trim();const t=clone(getT(S.tid));
-  if(!nm)return toast('Впишите имя');
-  if(t.players.some(p=>p.name.toLowerCase()===nm.toLowerCase()))return toast('Такое имя уже за столом');
-  t.players.push({id:rid(),name:nm,score:start,out:false,place:null,nick:null,outRound:null,joined:t.rounds.length+1});
-  t.updatedAt=Date.now();closeSheet();upsertLocal(t);render();await saveT(t);
-  store.setRoster(nkey(nm),{name:nm,lastUsed:Date.now()}).catch(()=>{});
-  toast(nm+' в игре с '+start);
-}
-
-/* сменить сдающего */
-function openDealer(){
-  const t=getT(S.tid);R={kind:'dealer'};
-  sheet('Кто раздаёт сейчас?',`<div class="chips">${alive(t).map(p=>`<button class="chip ${p.id===t.dealerId?'on':''}" onclick="setDealer('${p.id}')">${esc(p.name)}</button>`).join('')}</div>`);
-}
-/* пересадка и уход */
-function openSeats(){const t=getT(S.tid);R={kind:'seats',order:alive(t).map(p=>p.id),rm:[]};renderSeats()}
-function renderSeats(){
-  const t=getT(S.tid);const by=id=>t.players.find(p=>p.id===id);const n=R.order.length;
-  const stay=R.order.filter(id=>!R.rm.includes(id)).length;
-  sheet('Пересадка и уход',`<p class="note">Порядок — по часовой стрелке. Стрелками переставьте тех, кто пересел, кнопкой «уходит» отметьте тех, кто заканчивает игру.</p>
-    <div class="list">${R.order.map((id,i)=>{const p=by(id),g=R.rm.includes(id);return `<div class="srow ${g?'gone':''}"><span class="seat num">${i+1}</span><span class="sn"><span>${esc(p.name)}</span><small class="num">${p.score} очк.${id===t.dealerId?' · сдаёт':''}</small></span>
-      <button class="ar" ${i===0?'disabled':''} onclick="mvSeat(${i},-1)" aria-label="Выше">↑</button><button class="ar" ${i===n-1?'disabled':''} onclick="mvSeat(${i},1)" aria-label="Ниже">↓</button>
-      <button class="tog ${g?'rm':''}" onclick="tgLeave('${id}')">${g?'уходит':'уходит?'}</button></div>`}).join('')}</div>
-    ${stay<2?'<div class="warn">В игре должны остаться минимум двое.</div>':''}
-    ${R.rm.length?`<p class="note">Ушедшие останутся в истории стола, но без места и прозвища. Раздача на ${stay}: по ${cardsFor(stay)} ${plural(cardsFor(stay),'карте','карты','карт')}.</p>`:''}`,
-    `<button class="btn primary block" ${stay<2?'disabled':''} onclick="saveSeats()">Сохранить</button>`);
-}
-function mvSeat(i,d){const j=i+d;if(j<0||j>=R.order.length)return;[R.order[i],R.order[j]]=[R.order[j],R.order[i]];renderSeats()}
-function tgLeave(id){R.rm=R.rm.includes(id)?R.rm.filter(x=>x!==id):[...R.rm,id];renderSeats()}
-async function saveSeats(){
-  const t=clone(getT(S.tid));const n=R.order.length;
-  if(R.order.filter(id=>!R.rm.includes(id)).length<2)return;
-  if(R.rm.includes(t.dealerId)){const i=R.order.indexOf(t.dealerId);for(let k=1;k<=n;k++){const id=R.order[(i+k)%n];if(!R.rm.includes(id)){t.dealerId=id;break}}}
-  const seated=R.order.map(id=>t.players.find(p=>p.id===id));
-  for(const p of seated)if(R.rm.includes(p.id))Object.assign(p,{out:true,left:true,leftRound:t.rounds.length,nick:null,place:null});
-  t.players=[...seated,...t.players.filter(p=>!R.order.includes(p.id))];
-  t.updatedAt=Date.now();const gone=R.rm.length;closeSheet();upsertLocal(t);render();await saveT(t);
-  toast(gone?`Состав обновлён · ушли: ${gone}`:'Места обновлены');
-}
-async function setDealer(id){const t=clone(getT(S.tid));t.dealerId=id;t.updatedAt=Date.now();closeSheet();upsertLocal(t);render();await saveT(t)}
-
-/* ---------- запись раунда ---------- */
-function openRound(){R={kind:'round',tid:S.tid,deltas:{},cards:{},finisher:null,fq:null,status:{}};renderRound()}
-function renderRound(){
-  const t=getT(R.tid);const al=alive(t);
-  let b=`<div class="list"><h2>Кто закрыл раунд</h2><div class="chips">${al.map(p=>`<button class="chip ${R.finisher===p.id?'on':''}" onclick="R.finisher=R.finisher==='${p.id}'?null:'${p.id}';R.fq=null;renderRound()">${esc(p.name)}</button>`).join('')}</div></div>`;
-  if(R.finisher){
-    b+=`<div class="list"><h2>Последняя карта</h2><div class="chips"><button class="chip ${!R.fq?'on':''}" onclick="R.fq=null;renderRound()">Обычная · 0</button>${['s','c','h','d'].map(s=>`<button class="chip q ${R.fq===s?'on':''}" onclick="R.fq='${s}';renderRound()">Д<span class="${isRed(s)?'rd':''}">${SUIT[s]}</span> −${QBONUS[s]}</button>`).join('')}</div></div>`;
-  }
-  b+=`<div class="list"><h2>Очки на руках</h2>`;
-  for(const p of al){
-    if(p.id===R.finisher){
-      b+=`<div class="rrow"><div class="h"><b>${esc(p.name)}</b><span class="pv" id="pv-${p.id}"></span></div><span class="fin">Закрыл раунд: ${R.fq?'−'+QBONUS[R.fq]+' за даму '+SUITN[R.fq]:'0 очков'}</span></div>`;
-    }else{
-      const v=R.deltas[p.id]??'';const cs=R.cards[p.id];
-      b+=`<div class="rrow"><div class="h"><b>${esc(p.name)}</b><span class="pv" id="pv-${p.id}"></span></div>
-      <div class="ctl"><input type="number" inputmode="numeric" id="in-${p.id}" value="${v}" placeholder="0" oninput="setDelta('${p.id}',this.value)" aria-label="Очки ${esc(p.name)}">
-      <button class="ib" onclick="openPicker('${p.id}')" aria-label="Посчитать по картам">🃏</button>
-      ${S.canPhoto?`<label class="ib" aria-label="Сфотографировать карты">📷<input type="file" accept="image/*" capture="environment" id="ph-${p.id}" onchange="photo('${p.id}',this)"></label>`:''}</div>
-      ${cs?.length?`<span class="stat">${cs.map(cardLabel).join(' ')}</span>`:''}<span class="stat" id="st-${p.id}">${esc(R.status[p.id]||'')}</span></div>`;
-    }
-  }
-  b+=`</div>`;
-  sheet(`Раунд ${t.rounds.length+1}`,b,`<div class="note" id="rd-err"></div><button class="btn primary block" id="rd-go" onclick="saveRound()">Сохранить раунд</button>`);
-  for(const p of al)preview(p.id);validRound();
-}
-function setDelta(pid,v){R.deltas[pid]=v;delete R.cards[pid];preview(pid);validRound()}
-function preview(pid){
-  const t=getT(R.tid);const p=t.players.find(x=>x.id===pid);const el=$('#pv-'+pid);if(!el||!p)return;
-  let d=pid===R.finisher?(R.fq?-QBONUS[R.fq]:0):Number(R.deltas[pid]);
-  if(pid!==R.finisher&&(R.deltas[pid]===''||R.deltas[pid]==null)){el.className='pv';el.textContent=`сейчас ${p.score}`;return}
-  const n=p.score+(d||0);
-  el.className='pv'+(n===LIMIT?' z':n>LIMIT?' o':'');
-  el.textContent=n===LIMIT?`${p.score} → ровно 108 → 0!`:n>LIMIT?`${p.score} → ${n} · вылет`:`${p.score} → ${n}`;
-}
-function validRound(){
-  const t=getT(R.tid);const miss=alive(t).filter(p=>p.id!==R.finisher&&(R.deltas[p.id]===''||R.deltas[p.id]==null||isNaN(Number(R.deltas[p.id]))));
-  for(const p of alive(t)){const i=$('#in-'+p.id);if(i)i.classList.toggle('miss',miss.includes(p)&&R.touched)}
-  const e=$('#rd-err'),b=$('#rd-go');if(!b)return false;
-  e.textContent=miss.length?'Не заполнено: '+miss.map(p=>p.name).join(', '):'';
-  b.disabled=!!miss.length;return !miss.length;
-}
-async function saveRound(){
-  R.touched=true;if(!validRound())return;
-  const t=clone(getT(R.tid));
-  applyRound(t,R.deltas,R.finisher,R.fq);
-  closeSheet();upsertLocal(t);render();
-  const r=t.rounds[t.rounds.length-1];
-  if(r.outIds.length||r.zeroIds.length||t.status==='done')showEvents(t,r);
-  seen[t.id]=t.rounds.length;
-  await saveT(t);
-}
-
-/* ---------- подсчёт по картам ---------- */
-let P=null;
-function openPicker(pid,cards,note){P={pid,cards:cards||clone(R.cards[pid]||[]),q:false,note:note||''};renderPicker()}
-function renderPicker(){
-  const t=getT(R.tid);const p=t.players.find(x=>x.id===P.pid);
-  const sum=handSum(P.cards);
-  $('#picker-root').innerHTML=`<div class="sheet-wrap" style="z-index:60" onclick="if(event.target===this)closePicker()"><div class="sheet" role="dialog" aria-label="Карты"><header><h3>Карты: ${esc(p.name)}</h3><button class="x" onclick="closePicker()" aria-label="Закрыть">✕</button></header>
-  <div class="body">
-    ${P.note?`<div class="warn">${esc(P.note)}</div>`:''}
-    <div class="ptotal"><span class="muted">${P.cards.length} ${plural(P.cards.length,'карта','карты','карт')}</span><span class="v num">${sum}</span></div>
-    <div class="picked">${P.cards.length?P.cards.map((c,i)=>`<button class="pc ${isRed(c.s)?'rd':''}" onclick="P.cards.splice(${i},1);renderPicker()" aria-label="Убрать ${cardLabel(c)}">${cardLabel(c)}</button>`).join(''):'<span class="note">Нажимайте на карты, которые остались на руках. Тап по карте сверху — убрать.</span>'}</div>
-    ${P.q?`<div class="list"><h2>Какая дама?</h2><div class="qs">${['s','c','h','d'].map(s=>`<button onclick="P.cards.push({r:'Q',s:'${s}'});P.q=false;renderPicker()"><span class="${isRed(s)?'rd':''}">Д${SUIT[s]}</span><span>одна: +${QBONUS[s]}</span></button>`).join('')}</div></div>`:''}
-    <div class="ranks">${RANKS.map(x=>`<button class="rk ${x.r==='Q'&&P.q?'on':''}" onclick="${x.r==='Q'?'P.q=!P.q':`P.cards.push({r:'${x.r}'})`};renderPicker()"><b>${x.l}</b><span>${x.r==='Q'?'+ масть':x.v+' очк.'}</span></button>`).join('')}</div>
-    <p class="note">Дама — 3 очка. Если на руке осталась только одна дама: пиковая +40, остальные +20.</p>
-  </div>
-  <footer><button class="btn primary block" onclick="pickerDone()">Готово · ${sum}</button><button class="btn block" onclick="P.cards=[];renderPicker()">Очистить</button></footer></div></div>`;
-}
-function closePicker(){$('#picker-root').innerHTML='';P=null}
-function pickerDone(){
-  const sum=handSum(P.cards);
-  R.deltas[P.pid]=String(sum);R.cards[P.pid]=P.cards;R.status[P.pid]='';closePicker();renderRound();
-}
-
-/* ---------- фото → очки ---------- */
-const PHOTO_PROMPT=`На фото игральные карты из колоды 36 карт (6, 7, 8, 9, 10, валет, дама, король, туз). Перечисли КАЖДУЮ карту, которую видно на фото, ровно по одному разу. Если карты лежат веером и перекрываются — считай каждую по видимому углу.
-Ответь только JSON: {"cards":[{"r":"6|7|8|9|10|J|Q|K|A","s":"s|c|h|d"}],"unsure":false}
-r: J = валет (В), Q = дама (Д), K = король (К), A = туз (Т).
-s: s = пики ♠, c = трефы/крести ♣, h = черви ♥, d = бубны/кирпич ♦.
-unsure = true, если какие-то карты разглядеть не удалось.`;
-async function photo(pid,input){
-  const f=input.files?.[0];input.value='';if(!f)return;
-  const st=$('#st-'+pid);R.status[pid]='Считаю карты на фото…';if(st)st.textContent=R.status[pid];
-  try{
-    const res=await visionCards(f);
-    const cards=(res?.cards||[]).map(c=>({r:String(c.r).toUpperCase(),s:String(c.s||'').toLowerCase()}))
-      .filter(c=>c.r in RV).map(c=>c.r==='Q'?{r:'Q',s:SUIT[c.s]?c.s:'c'}:{r:c.r});
-    R.status[pid]='';if(st)st.textContent='';
-    if(!R||R.kind!=='round')return;
-    openPicker(pid,cards,cards.length?`Распознано ${cards.length} ${plural(cards.length,'карта','карты','карт')}${res?.unsure?' — часть не разглядеть':''}. Проверьте и поправьте, если нужно.`:'На фото не нашёл карт. Добавьте вручную или переснимите.');
-  }catch(e){
-    const m={bad_key:'Ключ API не подошёл — проверьте его в настройках',no_key:'Добавьте ключ API в настройках',not_granted:'Фото-подсчёт не разрешён — считайте тапами по картам',rate_limited:'Слишком много фото подряд — подождите минуту',image_rejected:'Фото не подошло — переснимите',refused:'Не удалось распознать — переснимите',invalid_json:'Не разобрал карты — переснимите ближе'}[e?.code]||'Не получилось распознать — попробуйте ещё раз';
-    R&&(R.status[pid]=m);if(st)st.textContent=m;
-    
-  }
-}
-
-async function visionCards(file){
-  if(!S.apiKey)throw {code:'no_key'};
-  // уменьшаем фото до 1568px по длинной стороне — быстрее и дешевле
-  const bmp=await createImageBitmap(file);const k=Math.min(1,1568/Math.max(bmp.width,bmp.height));
-  const cv=document.createElement('canvas');cv.width=Math.round(bmp.width*k);cv.height=Math.round(bmp.height*k);
-  cv.getContext('2d').drawImage(bmp,0,0,cv.width,cv.height);
-  const b64=cv.toDataURL('image/jpeg',.85).split(',')[1];
-  let r;
-  try{r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'content-type':'application/json','x-api-key':S.apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-    body:JSON.stringify({model:CFG.visionModel||'claude-sonnet-5-5',max_tokens:1000,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:'image/jpeg',data:b64}},{type:'text',text:PHOTO_PROMPT}]}]})})}
-  catch{throw {code:'upstream'}}
-  if(!r.ok)throw {code:r.status===401||r.status===403?'bad_key':r.status===429?'rate_limited':'upstream'};
-  const j=await r.json();const txt=(j.content||[]).map(c=>c.text||'').join('');
-  const m=txt.match(/\{[\s\S]*\}/);if(!m)throw {code:'invalid_json'};
-  try{return JSON.parse(m[0])}catch{throw {code:'invalid_json'}}
-}
-
-/* ---------- настройки ---------- */
-function openSettings(){
-  R={kind:'set'};
-  sheet('Настройки',`<div class="list"><h2>Где хранится счёт</h2><p class="note">${S.mode==='cloud'?'Общий сервер: столы видны на всех телефонах, где открыто приложение. Записывать очки может только создатель стола.':'Только этот телефон: столы хранятся в памяти браузера и работают без интернета. Чтобы друзья видели столы, включите общий сервер — инструкция в README.'}</p></div>
-    <div class="list"><h2>Фото-подсчёт</h2><p class="note">Нужен ключ Anthropic API. Он хранится только на этом телефоне и уходит только в Anthropic. Без ключа считайте тапами по картам.</p>
-    <div class="fld"><input id="api-key" type="password" placeholder="sk-ant-..." value="${esc(S.apiKey||'')}" autocomplete="off"></div></div>`,
-    `<button class="btn primary block" onclick="saveSettings()">Сохранить</button>`);
-}
-function saveSettings(){S.apiKey=$('#api-key').value.trim();LS.set('s108.apikey',S.apiKey);S.canPhoto=!!S.apiKey;closeSheet();render();toast(S.canPhoto?'Фото-подсчёт включён':'Фото-подсчёт выключен')}
-
-/* ---------- вылет / Танос ---------- */
-function showEvents(t,r){
-  const by=id=>t.players.find(p=>p.id===id);
-  let items='';
-  for(const id of r.zeroIds||[]){const p=by(id);if(p)items+=`<div class="item z"><span class="who">${esc(p.name)} набрал ровно 108</span><span class="nk">Обнулился!</span></div>`}
-  for(const id of r.outIds||[]){const p=by(id);if(p)items+=`<div class="item"><span class="who">${esc(p.name)} выбыл · ${p.place}-м</span><span class="nk">${esc(p.nick||'')}</span></div>`}
-  if(t.status==='done'&&t.winner&&r===t.rounds[t.rounds.length-1])items+=`<div class="item th"><span class="who">Победитель — ${esc(t.winner.name)}</span><span class="nk">${WIN_NICK}</span><span class="tag">${esc(WIN_TAG)}</span></div>`;
-  if(!items)return;
-  $('#ev-root').innerHTML=`<div class="ev" role="dialog" onclick="this.remove()">${items}<span class="tap">Нажмите, чтобы продолжить</span></div>`;
-}
-
-init();
-
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+render();open();
 </script>
 </body>
 </html>
