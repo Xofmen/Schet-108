@@ -287,10 +287,10 @@ function home(){
   <div class="list"><h2>Новая игра</h2><button class="btn primary block" onclick="createRoom()">Создать комнату</button></div>
   <div class="list"><h2>Войти в комнату</h2><div class="fld"><input id="cd" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="Код из 4 цифр" value="${esc(pre)}" oninput="pre=this.value"></div><button class="btn block" onclick="joinRoom()">Войти</button></div>`;
 }
-const top=t=>`<div class="top"><button class="back" onclick="leave()" aria-label="Выйти">←</button><h1>${t}</h1></div>`;
+const renderTop=t=>`<div class="top"><button class="back" onclick="leave()" aria-label="Выйти">←</button><h1>${t}</h1></div>`;
 function lobby(){
   const mine=room.creator===uid;
-  return `${top('Комната '+room.code)}
+  return `${renderTop('Комната '+room.code)}
   <div class="deal"><div><div class="lbl">Код комнаты</div><div class="who">${room.code}</div></div><div class="cards">${room.players.length}<span>${room.players.length<2?'игрок':'в списке'}</span></div></div>
   <button class="btn block" onclick="share()">Поделиться ссылкой</button>
   <div class="list"><h2>Игроки</h2><div class="players">${room.players.map(p=>`<div class="pl"><div class="st ok">✓</div><div class="nm"><span class="n">${esc(p.name)}</span>${p.id===room.creator?'<span class="dl">создатель</span>':''}${p.id===uid?'<span class="pill">ты</span>':''}</div></div>`).join('')}</div></div>
@@ -299,7 +299,7 @@ function lobby(){
 function game(){
   const r=room,done=r.status==='done',rn=roundNo(r),m=me(),al=alive(r),wait=al.filter(p=>p.scores.length<rn);
   const win=done&&r.winner;
-  let h=top('Комната '+r.code)+`<div class="deal ${done?'win':''}"><div><div class="lbl">${done?'Игра окончена':'Раунд '+rn}</div><div class="who">${done?'👑 '+esc(r.winner.name):wait.length?'Ждём: '+wait.map(p=>esc(p.name)).join(', '):'Все записали'}</div></div><div class="cards">${done?'👑':rn}<span>${done?'победитель':'раунд'}</span></div></div>`;
+  let h=renderTop('Комната '+r.code)+`<div class="deal ${done?'win':''}"><div><div class="lbl">${done?'Игра окончена':'Раунд '+rn}</div><div class="who">${done?'👑 '+esc(r.winner.name):wait.length?'Ждём: '+wait.map(p=>esc(p.name)).join(', '):'Все записали'}</div></div><div class="cards">${done?'👑':rn}<span>${done?'победитель':'раунд'}</span></div></div>`;
   if(m&&!done){
     if(m.out)h+=`<div class="rrow"><div class="h"><b>Ты выбыл</b><span class="pv o">${esc(m.nick||'')}</span></div><div class="stat">Твоя карточка закрыта. Смотри, как играют остальные.</div></div>`;
     else if(m.scores.length>=rn)h+=`<div class="rrow"><div class="h"><b>Раунд ${rn}: записано</b><span class="pv z">${m.scores[rn-1]>0?'+':''}${m.scores[rn-1]}</span></div><div class="stat">Ждём остальных игроков…</div><button class="btn sm" onclick="fix()">Исправить</button></div>`;
